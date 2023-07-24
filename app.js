@@ -6,6 +6,7 @@ const notFound = require("./middlewares/notFoundHandler");
 const errorHandler = require("./middlewares/errorHandler");
 
 const tripRoutes = require("./api/Trips/trip.routes");
+const userRoutes = require("./api/Auth/auth.routes");
 const config = require("./config/keys");
 const passport = require("passport");
 const path = require("path");
@@ -31,6 +32,7 @@ passport.use(jwtStrategy);
 //routes
 // app.use("/api/users", authRoutes);
 app.use("/api/trips", tripRoutes);
+app.use("/api/users", userRoutes);
 
 //errorhandlers:
 app.use(notFound);

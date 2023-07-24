@@ -2,6 +2,7 @@ const express = require("express");
 const { getAllTrips, createTrip, upadateTrip, deleteTrip } = require("./trip.controllers");
 const Trip = require("../../models/Trip");
 const uploader = require("../../middlewares/uploader");
+const passport = require("passport");
 const router = express.Router();
 
 router.param("tripId", async (req, res, next, tripId) => {
