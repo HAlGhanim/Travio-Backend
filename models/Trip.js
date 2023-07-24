@@ -3,7 +3,9 @@ const { model, Schema } = require("mongoose");
 
 const TripSchema = new Schema({
   title: { type: String, unique: true, required: true },
+
   tripImage: { type: String, required: true },
+
   description: { type: String, unique: false, required: true },
 
   // countries: [{ type: Schema.Types.ObjectId, ref: 'Country' }]

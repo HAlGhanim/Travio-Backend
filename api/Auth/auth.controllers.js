@@ -52,7 +52,7 @@ exports.fetchTemp = async (tempId, next) => {
   }
 };
 
-exports.getTemp = async (req, res, next) => {
+exports.getUser = async (req, res, next) => {
   try {
     const temps = await Temp.find().select("-__v");
     return res.status(200).json(temps);
@@ -61,7 +61,7 @@ exports.getTemp = async (req, res, next) => {
   }
 };
 
-exports.updateTemp = async (req, res, next) => {
+exports.updateUser = async (req, res, next) => {
   try {
     await Temp.findByIdAndUpdate(req.temp.id, req.body);
     return res.status(204).end();

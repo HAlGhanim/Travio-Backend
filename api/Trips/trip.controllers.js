@@ -2,7 +2,7 @@ const Trip = require("../../models/Trip");
 
 exports.getAllTrips = async (req, res, next) => {
   try {
-    const trips = await Trip.find();
+    const trips = await Trip.find().populate("createdBy");
     res.status(200).json(trips);
   } catch (error) {
     next(error);
