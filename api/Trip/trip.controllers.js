@@ -1,6 +1,5 @@
-const Temp = require("../../models/Temp");
-const passHash = require("../../utils/auth/passhash");
-const generateToken = require("../../utils/auth/generateToken");
+const Trip = require("../../models/Trip");
+
 
 // Everything with the word temp is a placeholder that you'll change in accordance with your project
 
@@ -34,14 +33,7 @@ exports.createTemp = async (req, res, next) => {
   }
 };
 
-exports.signin = async (req, res) => {
-  try {
-    const token = generateToken(req.user);
-    return res.status(200).json({ token });
-  } catch (err) {
-    return res.status(500).json(err.message);
-  }
-};
+
 
 exports.updateTemp = async (req, res, next) => {
   try {
