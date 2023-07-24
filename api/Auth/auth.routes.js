@@ -6,7 +6,7 @@ const {
   fetchTemp,
   signin,
   signup,
-} = require("./temp.controllers");
+} = require("./auth.controllers");
 const router = express.Router();
 const passport = require("passport");
 

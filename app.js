@@ -1,32 +1,41 @@
 const express = require("express");
-const connectDb = require("./database");
 const cors = require("cors");
 const morgan = require("morgan");
-const app = express();
+
 const notFound = require("./middlewares/notFoundHandler");
 const errorHandler = require("./middlewares/errorHandler");
-const tempRoutes = require("./api/temp/temp.routes");
+
+const tripRoutes = require("./api/Trips/trip.routes");
 const config = require("./config/keys");
 const passport = require("passport");
+const path = require("path");
 const { localStrategy, jwtStrategy } = require("./middlewares/passport");
+const connectDB = require("./database");
 
+connectDB();
+
+//declare var
+const app = express();
+
+//middlewares:
 app.use(cors());
-connectDb();
 app.use(express.json());
+app.use("/media", express.static(path.join(__dirname, "media")));
 app.use(morgan("dev"));
 
+//passport
 app.use(passport.initialize());
 passport.use("local", localStrategy);
 passport.use(jwtStrategy);
 
-// Everything with the word temp is a placeholder that you'll change in accordance with your project
-app.use("/temp", tempRoutes);
+//routes
+// app.use("/api/users", authRoutes);
+app.use("/api/trips", tripRoutes);
 
+//errorhandlers:
 app.use(notFound);
 app.use(errorHandler);
 
 app.listen(config.PORT, () => {
   console.log(`The application is running on ${config.PORT}`);
 });
-
-module.exports = app;
