@@ -1,80 +1,83 @@
 const User = require("../../models/User");
-const bcrypt = require("bcrypt");
-const jwt = require("jsonwebtoken");
-require("dotenv").config();
-// Everything with the word temp is a placeholder that you'll change in accordance with your project
+const generateToken = require("../../utils/auth/generateToken");
 
-const passHash = async (password) => {
-  const rounds = 10;
-  const hashedPassword = await bcrypt.hash(password, rounds);
-  return hashedPassword;
-};
-
-const generateToken = (temp) => {
-  const payload = {
-    _id: temp._id,
-    name: temp.name,
-  };
-  const token = jwt.sign(payload, process.env.JWT_SECRET, {
-    expiresIn: process.env.JWT_TOKEN_EXP,
-  });
-  return token;
+exports.fetchUser = async (userId, next) => {
+  try {
+    const user = await User.findById(userId);
+    return user;
+  } catch (error) {
+    return next(error);
+  }
 };
 
 exports.signin = async (req, res) => {
   try {
-    console.log(req.user);
     const token = generateToken(req.user);
     return res.status(200).json({ token });
-  } catch (err) {
-    res.status(500).json(err.message);
+  } catch (error) {
+    return next({ status: 400, message: error.message });
   }
 };
 
-exports.signup = async (req, res) => {
+exports.signup = async (req, res, next) => {
   try {
-    const { password } = req.body;
-    req.body.password = await passHash(password);
-    const newTemp = await Temp.create(req.body);
-    const token = generateToken(newTemp);
+    if (req.file) {
+      req.body.image = `${req.file.path.replace("\\", "/")}`;
+    }
+    const newUser = await User.create(req.body);
+    const token = generateToken(newUser);
     res.status(201).json({ token });
-  } catch (err) {
-    res.status(500).json(err.message);
-  }
-};
-
-exports.fetchTemp = async (tempId, next) => {
-  try {
-    const temp1 = await Temp.findById(tempId);
-    return temp1;
   } catch (error) {
-    return next(error);
+    return next({ status: 400, message: error.message });
   }
 };
 
-exports.getTemp = async (req, res, next) => {
+exports.getUsers = async (req, res, next) => {
   try {
-    const temps = await Temp.find().select("-__v");
-    return res.status(200).json(temps);
+    const users = await User.find()
+      .select("-__v -password -email")
+    return res.status(200).json(users);
   } catch (error) {
-    return next(error);
+    return next({ status: 400, message: error.message });
   }
 };
 
-exports.updateTemp = async (req, res, next) => {
+exports.getProfile = async (req, res, next) => {
   try {
-    await Temp.findByIdAndUpdate(req.temp.id, req.body);
+    const users = await User.find({ _id: req.user._id }).select(
+      "-__v -password"
+    );
+    return res.status(200).json(users);
+  } catch (error) {
+    return next({ status: 400, message: error.message });
+  }
+};
+
+exports.updateUser = async (req, res, next) => {
+  try {
+    if (!req.user._id.equals(req.foundUser._id))
+      return next({
+        status: 400,
+        message: "you dont have the permission to preform this task!",
+      });
+
+    await User.findByIdAndUpdate(req.user.id, req.body);
     return res.status(204).end();
   } catch (error) {
-    return next(error);
+    return next({ status: 400, message: error.message });
   }
 };
 
-exports.deleteTemp = async (req, res, next) => {
+exports.deleteUser = async (req, res, next) => {
   try {
-    await Temp.findByIdAndRemove({ _id: req.temp.id });
+    if (!req.user._id.equals(req.foundUser._id))
+      return next({
+        status: 400,
+        message: "you dont have the permission to preform this task!",
+      });
+    await User.findByIdAndRemove({ _id: req.user.id });
     return res.status(204).end();
   } catch (error) {
-    return next(error);
+    return next({ status: 400, message: error.message });
   }
 };

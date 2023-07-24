@@ -1,32 +1,45 @@
 const express = require("express");
 const {
-  getTemp,
-  updateTemp,
-  deleteTemp,
-  fetchTemp,
+  updateUser,
+  deleteUser,
+  fetchUser,
   signin,
   signup,
+  getUsers,
+  getProfile,
 } = require("./auth.controllers");
 const router = express.Router();
 const passport = require("passport");
+const { hashing } = require("../../middlewares/password");
+const {
+  FieldValidation,
+  inputValidator,
+  passwordValidator,
+  emailValidator,
+} = require("../../middlewares/userValidation");
 
-// Everything with the word temp is a placeholder that you'll change in accordance with your project
-
-router.param("tempId", async (req, res, next, tempId) => {
+router.param("userId", async (req, res, next, userId) => {
   try {
-    const foundTemp = await fetchTemp(tempId);
-    if (!foundTemp) return next({ status: 404, message: "Temp not found" });
-    req.temp = foundTemp;
+    const foundUser = await fetchUser(userId);
+    if (!foundUser) return next({ status: 404, message: "User not found" });
+    req.foundUser = foundUser;
     next();
   } catch (error) {
     return next(error);
   }
 });
 
-router.get("/", getTemp);
-router.post("/signup", signup);
-router.put("/:tempId", updateTemp);
-router.delete("/:tempId", deleteTemp);
+router.get("/", getUsers);
+router.get("/profile/:userId", getProfile);
+router.post(
+  "/signup",
+  inputValidator([...emailValidator, ...passwordValidator], true),
+  FieldValidation,
+  hashing,
+  signup
+);
+router.put("/:userId", updateUser);
+router.delete("/:userId", deleteUser);
 
 router.post(
   "/signin",

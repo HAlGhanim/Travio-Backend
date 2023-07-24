@@ -6,16 +6,20 @@ const config = require("../config/keys");
 const User = require("../models/User");
 
 exports.localStrategy = new LocalStrategy(
-  { usernameField: "email" },
-  async (email, password, done) => {
+  {
+    usernameField: "userOrEmail",
+  },
+  async (userOrEmail, password, done) => {
     try {
-      const user = await User.findOne({ email: email });
+      const user = await User.findOne({
+        $or: [{ username: userOrEmail }, { email: userOrEmail }],
+      });
       if (!user) {
-        return done(null, false);
+        return done({ message: "Invalid username / email" }, false);
       }
       const passwordMatch = await bcrypt.compare(password, user.password);
       if (!passwordMatch) {
-        return done(null, false);
+        return done({ message: "Invalid password" }, false);
       }
       return done(null, user);
     } catch (error) {
