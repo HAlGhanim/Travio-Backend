@@ -9,7 +9,7 @@ const TripSchema = new Schema({
   // countries: [{ type: Schema.Types.ObjectId, ref: 'Country' }]
 
   // create relations in here and in the other model
-  createdBy: { type: Schema.Types.ObjectId, ref: "User" },
+  createdBy: { type: Schema.Types.ObjectId, ref: "User", required: true },
 });
 
 module.exports = model("Trip", TripSchema);
