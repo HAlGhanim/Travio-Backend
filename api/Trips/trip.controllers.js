@@ -31,22 +31,22 @@ exports.createTrip = async (req, res, next) => {
 
 exports.upadateTrip = async (req, res, next) => {
     try {
-        //    const trip=  await Trip.updateOne(trip)
-        //     return res.status(204).json({ message: "trip updated" })
 
-        // const owner = req.user.createdBy
-        // if (owner) {
-        const { tripId } = req.params;
-        const trip = await Trip.findById(tripId)
-        if (!trip) {
-            res.status(404).json({ message: "trip not found" })
-        } else {
 
-            await trip.updateOne(req.body)
-            return res.status(200).json({ message: "trip updated" })
+
+        // trip.createdBy.equal(req.user._id) 
+        if (trip.createdBy.equal(req.user._id)) {
+            const { tripId } = req.params;
+            const trip = await Trip.findById(tripId)
+            if (!trip) {
+                res.status(404).json({ message: "trip not found" })
+            } else {
+
+                await trip.updateOne(req.body)
+                return res.status(200).json({ message: "trip updated" })
+            }
         }
-        // }
-        // return res.status(404).json({ message: "you are not the creater of this trip" })
+        return res.status(404).json({ message: "you are not the creater of this trip" })
     } catch (error) {
         next(error)
 
@@ -56,16 +56,16 @@ exports.upadateTrip = async (req, res, next) => {
 
 exports.deleteTrip = async (req, res, next) => {
     try {
-        // if (req.user._id.equals(req.trip.createdBy)) {
-        // await req.trip.deleteOne();
-        const { tripId } = req.params;
-        const trip = await Trip.findById(tripId)
-        if (trip) {
-            await Trip.deleteOne()
-            return res.status(204).json({ message: "trip is deleted" })
+        if (req.user._id.equals(req.trip.createdBy)) {
+            // /await req.trip.deleteOne();
+            const { tripId } = req.params;
+            const trip = await Trip.findById(tripId)
+            if (trip) {
+                await Trip.deleteOne()
+                return res.status(204).json({ message: "trip is deleted" })
+            }
         }
-        // }
-        // return res.status(401).json({ message: " you're not the creater of this trip" })
+        return res.status(401).json({ message: " you're not the creater of this trip" })
 
     } catch (error) {
         next(error)
