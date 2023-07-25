@@ -24,6 +24,7 @@ exports.signup = async (req, res, next) => {
     if (req.file) {
       req.body.image = `${req.file.path.replace("\\", "/")}`;
     }
+    console.log(req.body);
     const newUser = await User.create(req.body);
     const token = generateToken(newUser);
     res.status(201).json({ token });
@@ -34,8 +35,7 @@ exports.signup = async (req, res, next) => {
 
 exports.getUsers = async (req, res, next) => {
   try {
-    const users = await User.find()
-      .select("-__v -password -email")
+    const users = await User.find().select("-__v -password -email");
     return res.status(200).json(users);
   } catch (error) {
     return next({ status: 400, message: error.message });

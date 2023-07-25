@@ -17,6 +17,7 @@ const {
   passwordValidator,
   emailValidator,
 } = require("../../middlewares/userValidation");
+const upload = require("../../middlewares/uploader");
 
 router.param("userId", async (req, res, next, userId) => {
   try {
@@ -31,13 +32,16 @@ router.param("userId", async (req, res, next, userId) => {
 
 router.get("/", getUsers);
 router.get("/profile/:userId", getProfile);
+
 router.post(
   "/signup",
+  upload.single("image"),
   inputValidator([...emailValidator, ...passwordValidator], true),
   FieldValidation,
   hashing,
   signup
 );
+
 router.put("/:userId", updateUser);
 router.delete("/:userId", deleteUser);
 
