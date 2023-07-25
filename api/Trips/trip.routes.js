@@ -19,8 +19,8 @@ const router = express.Router();
 //     }
 // });
 router.get("/", getAllTrips);
-router.post("/", uploader.single("tripImage"), createTrip);
-router.put('/:tripId', uploader.single("tripImage"), upadateTrip)
+router.post("/", uploader.single("tripImage"), passport.authenticate('jwt', { session: false }), createTrip);
+router.put('/:tripId', uploader.single("tripImage"), passport.authenticate('jwt', { session: false }), upadateTrip)
 router.delete('/:tripId', passport.authenticate('jwt', { session: false }), deleteTrip)
 
 // , passport.authenticate('jwt', { session: false })
