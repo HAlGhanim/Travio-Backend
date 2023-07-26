@@ -9,11 +9,11 @@ exports.localStrategy = new LocalStrategy(async (username, password, done) => {
   try {
     const user = await User.findOne({ username: username });
     if (!user) {
-      return done({ message: "Invalid username" }, false);
+      return done({ message: "Invalid credentials" }, false);
     }
     const passwordMatch = await bcrypt.compare(password, user.password);
     if (!passwordMatch) {
-      return done({ message: "Invalid password" }, false);
+      return done({ message: "Invalid credentials" }, false);
     }
     return done(null, user);
   } catch (error) {
