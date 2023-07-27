@@ -6,6 +6,7 @@ module.exports = (user) => {
     _id: user._id,
     username: user.username,
     email: user.email,
+    image: user.image,
   };
   const token = jwt.sign(payload, config.JWT_SECRET, {
     expiresIn: config.JWT_TOKEN_EXP,

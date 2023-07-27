@@ -29,6 +29,7 @@ exports.createTrip = async (req, res, next) => {
     next(error);
   }
 };
+
 exports.getTripById = async (req, res, next) => {
   try {
     const { tripId } = req.params;
