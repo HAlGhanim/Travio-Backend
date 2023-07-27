@@ -25,6 +25,7 @@ router.param("tripId", async (req, res, next, tripId) => {
   }
 });
 router.get("/", getAllTrips);
+
 router.post(
   "/",
   uploader.single("tripImage"),
