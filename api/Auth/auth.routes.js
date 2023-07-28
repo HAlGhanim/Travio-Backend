@@ -42,8 +42,19 @@ router.post(
   signup
 );
 
-router.put("/:userId", updateUser);
-router.delete("/:userId", deleteUser);
+router.put(
+  "/:userId",
+  passport.authenticate("jwt", { session: false }),
+  inputValidator([...emailValidator, ...passwordValidator], false),
+  FieldValidation,
+  hashing,
+  updateUser
+);
+router.delete(
+  "/:userId",
+  passport.authenticate("jwt", { session: false }),
+  deleteUser
+);
 
 router.post(
   "/signin",
