@@ -5,7 +5,7 @@ const userSchema = new Schema(
     email: { type: String, unique: true, required: true },
     username: { type: String, unique: true },
     password: { type: String, required: true },
-    userImage: {
+    image: {
       type: String,
       default: "media/1690210343852cool-profile.jpeg",
     },
