@@ -12,7 +12,6 @@ exports.getAllTrips = async (req, res, next) => {
 exports.createTrip = async (req, res, next) => {
   try {
     req.body.createdBy = req.user._id;
-    // req.body.createdByUsername = req.user.username;
 
     if (req.file) {
       req.body.tripImage = `${req.file.path}`;
@@ -26,6 +25,7 @@ exports.createTrip = async (req, res, next) => {
     }
 
     const trip = await Trip.create(req.body);
+    await req.user.updateOne({ $push: { trips: trip._id } });
     return res.status(201).json(trip);
   } catch (error) {
     next(error);
