@@ -35,7 +35,6 @@ router.post(
 
 router.get(
     "/:tripId",
-    passport.authenticate("jwt", { session: false }),
     getTripById
 );
 router.put(
