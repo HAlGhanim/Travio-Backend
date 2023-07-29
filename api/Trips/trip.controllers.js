@@ -12,6 +12,7 @@ exports.getAllTrips = async (req, res, next) => {
 exports.createTrip = async (req, res, next) => {
   try {
     req.body.createdBy = req.user._id;
+
     if (req.file) {
       req.body.tripImage = `${req.file.path}`;
     }
@@ -82,22 +83,3 @@ exports.deleteTrip = async (req, res, next) => {
     next(error);
   }
 };
-
-//   exports.deleteTrip = async (req, res, next) => {
-//     try {
-//       const { tripId } = req.params;
-//       const trip = await Trip.findById(tripId);
-//       if (!trip) {
-//         return res.status(404).json({ message: "trip not found" });
-//       }
-//       if (req.user._id.equals(trip.createdBy)) {
-//         await trip.deleteOne();
-//         return res.status(204).json({ message: "trip is deleted" });
-//       }
-//       return res
-//         .status(401)
-//         .json({ message: " you're not the creater of this trip" });
-//     } catch (error) {
-//       next(error);
-//     }
-//   };
