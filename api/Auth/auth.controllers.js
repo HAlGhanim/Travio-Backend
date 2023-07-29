@@ -42,16 +42,16 @@ exports.getUsers = async (req, res, next) => {
   }
 };
 
-exports.getProfile = async (req, res, next) => {
-  try {
-    const users = await User.find({ _id: req.user._id }).select(
-      "-__v -password"
-    );
-    return res.status(200).json(users);
-  } catch (error) {
-    return next({ status: 400, message: error.message });
-  }
-};
+// exports.getProfile = async (req, res, next) => {
+//   try {
+//     const users = await User.find({ _id: req.user._id }).select(
+//       "-__v -password"
+//     );
+//     return res.status(200).json(users);
+//   } catch (error) {
+//     return next({ status: 400, message: error.message });
+//   }
+// };
 
 exports.updateUser = async (req, res, next) => {
   try {
@@ -79,5 +79,17 @@ exports.deleteUser = async (req, res, next) => {
     return res.status(204).end();
   } catch (error) {
     return next({ status: 400, message: error.message });
+  }
+};
+exports.getProfile = async (req, res, next) => {
+  try {
+    console.log(req.foundUser);
+    const profile = await User.findById(req.foundUser._id)
+      .select("-__v -password")
+      .populate("trips");
+    console.log(profile);
+    return res.status(200).json(profile);
+  } catch (error) {
+    next(error);
   }
 };

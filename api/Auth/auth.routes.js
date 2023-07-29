@@ -7,6 +7,7 @@ const {
   signup,
   getUsers,
   getProfile,
+  getMyProfile,
 } = require("./auth.controllers");
 const router = express.Router();
 const passport = require("passport");
@@ -32,7 +33,11 @@ router.param("userId", async (req, res, next, userId) => {
 
 router.get("/", getUsers);
 router.get("/profile/:userId", getProfile);
-
+// router.get(
+//   "/me",
+//   passport.authenticate("jwt", { session: false }),
+//   getMyProfile
+// );
 router.post(
   "/signup",
   upload.single("image"),
