@@ -42,17 +42,6 @@ exports.getUsers = async (req, res, next) => {
   }
 };
 
-// exports.getProfile = async (req, res, next) => {
-//   try {
-//     const users = await User.find({ _id: req.user._id }).select(
-//       "-__v -password"
-//     );
-//     return res.status(200).json(users);
-//   } catch (error) {
-//     return next({ status: 400, message: error.message });
-//   }
-// };
-
 exports.updateUser = async (req, res, next) => {
   try {
     if (!req.user._id.equals(req.foundUser._id))
@@ -61,7 +50,11 @@ exports.updateUser = async (req, res, next) => {
         message: "you dont have the permission to preform this task!",
       });
 
-    await User.findByIdAndUpdate(req.user.id, req.body);
+    const newUser = await User.findByIdAndUpdate(req.user._id, req.body, {
+      new: true,
+    });
+    console.log({ newUser, old: req.user });
+    console.log(req.body);
     return res.status(204).end();
   } catch (error) {
     return next({ status: 400, message: error.message });

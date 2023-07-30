@@ -48,11 +48,12 @@ router.post(
 );
 
 router.put(
-  "/:userId",
+  "/profile/:userId",
   passport.authenticate("jwt", { session: false }),
   inputValidator([...emailValidator, ...passwordValidator], false),
   FieldValidation,
-  hashing,
+  upload.single("image"),
+
   updateUser
 );
 router.delete(
